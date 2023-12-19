@@ -96,9 +96,9 @@ export default {
       <div v-if="loading" class="loader"></div>
     </div>
     <div class="btns">
-      <v-btn @click="buyPizza"> Заказать пиццу </v-btn>
-      <v-btn @click="tellAJoke"> Рассказать шутку </v-btn>
-      <v-btn @click="showWeather"> Отобразить погоду </v-btn>
+      <v-btn @click="buyPizza" :disabled="loading" > Заказать пиццу </v-btn>
+      <v-btn @click="tellAJoke" :disabled="loading" > Рассказать шутку </v-btn>
+      <v-btn @click="showWeather" :disabled="loading" > Отобразить погоду </v-btn>
     </div>
   </v-card>
 </template>
