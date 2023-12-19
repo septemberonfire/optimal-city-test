@@ -9,6 +9,7 @@ export default {
           id: 0,
         },
       ],
+      loading: false,
     };
   },
   methods: {
@@ -19,9 +20,7 @@ export default {
         id: new Date(),
       });
 
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
+      this.loading = true
 
       setTimeout(() => {
         this.messages.push({
@@ -29,16 +28,8 @@ export default {
           content: "Хорошо, я закажу для вас пиццу. Что-нибудь ещё?",
           id: new Date(),
         });
-        setTimeout(() => {
-          this.scrollChat();
-        }, 10);
+        this.loading = false
       }, 2000);
-
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
-
-
     },
     tellAJoke() {
       this.messages.push({
@@ -47,9 +38,7 @@ export default {
         id: new Date(),
       });
 
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
+      this.loading = true
 
       setTimeout(() => {
         this.messages.push({
@@ -57,14 +46,8 @@ export default {
           content: "Хорошо, я расскажу шутку. Что-нибудь ещё?",
           id: new Date(),
         });
-        setTimeout(() => {
-          this.scrollChat();
-        }, 10);
+        this.loading = false
       }, 2000);
-
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
     },
     showWeather() {
       this.messages.push({
@@ -73,10 +56,7 @@ export default {
         id: new Date(),
       });
 
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
-
+      this.loading = true
       setTimeout(() => {
         this.messages.push({
           owner: "bot-message",
@@ -84,27 +64,27 @@ export default {
             "Хорошо, я отображу погоду на данный момент. Что-нибудь ещё?",
           id: new Date(),
         });
-        setTimeout(() => {
-          this.scrollChat();
-        }, 10);
+        this.loading = false
       }, 2000);
-
-      setTimeout(() => {
-        this.scrollChat();
-      }, 10);
     },
+  },
 
-    scrollChat() {
-      document.querySelector(".dialog").scrollTop = 9999;
+  watch: {
+    messages: {
+      handler() {
+        const container = this.$el.querySelector(".dialog");
+        this.$nextTick(() => {
+          container.scrollTop = container.scrollHeight;
+        });
+      },
+      deep: true,
     },
   },
 };
 </script>
 
 <template>
-  <v-card variant="outlined" 
-  elevation="16"
-  class="container">
+  <v-card variant="outlined" elevation="16" class="container">
     <div class="interlocutor">
       <img src="./assets/ROBOT.jpg" alt="robot avatar" class="bot-avatar" />
       <h3>Simple VueJS Bot</h3>
@@ -113,6 +93,7 @@ export default {
       <div v-for="el in messages" :key="el.id" :class="el.owner">
         {{ el.content }}
       </div>
+      <div v-if="loading" class="loader"></div>
     </div>
     <div class="btns">
       <v-btn @click="buyPizza"> Заказать пиццу </v-btn>
@@ -129,9 +110,6 @@ export default {
   gap: 12px;
   max-width: 400px;
   padding: 20px;
-  /* -webkit-box-shadow: 10px 10px 26px 7px rgba(34, 60, 80, 0.2);
-  -moz-box-shadow: 10px 10px 26px 7px rgba(34, 60, 80, 0.2);
-  box-shadow: 10px 10px 26px 7px rgba(34, 60, 80, 0.2); */
 }
 
 @media screen and (min-width: 320px) {
@@ -210,4 +188,28 @@ export default {
   gap: 12px;
 }
 
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 60px;
+  min-height: 20px;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, aquamarine 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: calc(100% / 3) 50%;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
 </style>
